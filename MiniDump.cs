@@ -9,12 +9,17 @@ namespace ProcessDump
 {
     public class MiniDump
     {
-        public static void Create(string processName)
+        public static string Create(string processName)
         {
-            Create(processName, NativeMethods._MINIDUMP_TYPE.MiniDumpNormal);
+            return Create(processName, NativeMethods._MINIDUMP_TYPE.MiniDumpNormal, $@"c:\temp");
         }
 
-        public static void Create(string processName, NativeMethods._MINIDUMP_TYPE dumpType)
+        public static string Create(string processName, NativeMethods._MINIDUMP_TYPE dumpType)
+        {
+            return Create(processName, dumpType, $@"c:\temp");
+        }
+
+        public static string Create(string processName, NativeMethods._MINIDUMP_TYPE dumpType, string outputPath)
         {
             IntPtr hFile = IntPtr.Zero;
             if (IntPtr.Size == 4)
@@ -28,7 +33,7 @@ namespace ProcessDump
 
             try
             {
-                var dumpFileName = $"MiniDumpProcess-{dumpType.ToString()}.dmp";
+                var dumpFileName = $@"{outputPath}\MiniDumpProcess-{dumpType.ToString()}.dmp";
                 if (System.IO.File.Exists(dumpFileName))
                 {
                     System.IO.File.Delete(dumpFileName);
@@ -61,7 +66,7 @@ namespace ProcessDump
                     throw new InvalidOperationException("Can't create 32 bit dump of 64 bit process");
                 }
 
-                var isDumpWrittenSuccessfully = NativeMethods.WriteMiniDump(process.Handle, process.Id, hFile,
+                var isDumpWrittenSuccessfully = NativeMethods.MiniDumpWriteDump(process.Handle, process.Id, hFile,
                           dumpType, ref exceptInfo, UserStreamParam: IntPtr.Zero, CallbackParam: IntPtr.Zero);
 
                 if (!isDumpWrittenSuccessfully)
@@ -70,10 +75,13 @@ namespace ProcessDump
                     var ex = Marshal.GetExceptionForHR(hr);
                     throw ex;
                 }
+
+                return dumpFileName;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                throw ex;
             }
             finally
             {

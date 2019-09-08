@@ -6,7 +6,7 @@ namespace ProcessDump.Win32
     public static partial class NativeMethods
     {
         [DllImport("Dbghelp.dll")]
-        public static extern bool WriteMiniDump(IntPtr hProcess, int ProcessId, IntPtr hFile,
+        public static extern bool MiniDumpWriteDump(IntPtr hProcess, int ProcessId, IntPtr hFile,
             _MINIDUMP_TYPE DumpType, ref MINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
             IntPtr UserStreamParam, IntPtr CallbackParam);
 
