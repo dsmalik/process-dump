@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDump", "ProcessDump\ProcessDump.csproj", "{F79D3AC7-DBDB-4B13-B7BC-BCD07C7E0E7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDump", "ProcessDump.csproj", "{F79D3AC7-DBDB-4B13-B7BC-BCD07C7E0E7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
