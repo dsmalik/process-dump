@@ -25,7 +25,7 @@ deploy:
   api_key:
     secure: Ro9IveTmWauY2HSOTVg48Ex3GMJoXQ3lEDlVCY7Tjd2innB/QrbG7PzeghDPeEtf
   skip_symbols: false
-  symbol_server: https://www.myget.org/F/dsmalik/symbols/
+  symbol_server: https://www.myget.org/F/dsmalik/symbols/api/v2/package
   on:
     branch: master
 - provider: NuGet
