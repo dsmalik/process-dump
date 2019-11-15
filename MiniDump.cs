@@ -2,6 +2,7 @@
 using ProcessDump.Win32;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -9,17 +10,48 @@ namespace ProcessDump
 {
     public class MiniDump
     {
+        private static string TempPath = Directory.GetCurrentDirectory();
+
+        public static string Create(int processId)
+        {
+            return Create(processId, NativeMethods._MINIDUMP_TYPE.MiniDumpNormal);
+        }
+
+        public static string Create(int processId, NativeMethods._MINIDUMP_TYPE dumpType)
+        {
+            return Create(processId, dumpType, TempPath);
+        }
+
+        public static string Create(int processId, NativeMethods._MINIDUMP_TYPE dumpType, string path)
+        {
+            Process process = Process.GetProcessById(processId);
+
+            if (process == null)
+            {
+                throw new InvalidOperationException($"Specify a valid process id - {processId} not found.");
+            }
+
+            return Create(process, dumpType, path);
+        }
+
         public static string Create(string processName)
         {
-            return Create(processName, NativeMethods._MINIDUMP_TYPE.MiniDumpNormal, $@"c:\temp");
+            return Create(processName, NativeMethods._MINIDUMP_TYPE.MiniDumpNormal);
         }
 
         public static string Create(string processName, NativeMethods._MINIDUMP_TYPE dumpType)
         {
-            return Create(processName, dumpType, $@"c:\temp");
+            Process process = Process.GetProcessesByName(processName).FirstOrDefault();
+
+            if (process == null)
+            {
+                throw new InvalidOperationException($"Specify a valid process name - {processName} not found.");
+            }
+
+            return Create(process, dumpType, TempPath);
         }
 
-        public static string Create(string processName, NativeMethods._MINIDUMP_TYPE dumpType, string outputPath)
+        public static string Create(Process process, NativeMethods._MINIDUMP_TYPE dumpType, string outputPath)
         {
             IntPtr hFile = IntPtr.Zero;
             if (IntPtr.Size == 4)
@@ -34,9 +66,9 @@ namespace ProcessDump
             try
             {
                 var dumpFileName = $@"{outputPath}\MiniDumpProcess-{dumpType.ToString()}.dmp";
-                if (System.IO.File.Exists(dumpFileName))
+                if (File.Exists(dumpFileName))
                 {
-                    System.IO.File.Delete(dumpFileName);
+                    File.Delete(dumpFileName);
                 }
 
                 hFile = NativeMethods.CreateFile(dumpFileName, NativeMethods.EFileAccess.GenericWrite,
@@ -53,13 +85,6 @@ namespace ProcessDump
                 }
 
                 var exceptInfo = new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION();
-
-                var process = Process.GetProcessesByName(processName).FirstOrDefault();
-
-                if (process == null)
-                {
-                    throw new InvalidOperationException($"Specify a valid process name. {processName} process not found.");
-                }
 
                 if (!process.Is32BitProcess() && IntPtr.Size == 4)
                 {
