@@ -6,3 +6,4 @@
 /bin/Debug/netcoreapp2.2
 /obj
 /bin/Debug/net462
+*.nupkg
