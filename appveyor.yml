@@ -24,7 +24,7 @@ deploy:
   server: https://www.myget.org/F/dsmalik/api/v2/package
   api_key:
     secure: Ro9IveTmWauY2HSOTVg48Ex3GMJoXQ3lEDlVCY7Tjd2innB/QrbG7PzeghDPeEtf
-  skip_symbols: true
+  skip_symbols: false
   on:
     branch: master
 - provider: NuGet
