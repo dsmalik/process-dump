@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;net472;netcoreapp2.2</TargetFrameworks>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>dsmalik</Authors>
     <Description>Provides support for taking memory dump for the specified process.</Description>
     <PackageProjectUrl>https://github.com/dsmalik/process-dump</PackageProjectUrl>
